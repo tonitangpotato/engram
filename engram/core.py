@@ -79,6 +79,10 @@ class MemoryEntry:
     source_file: str = ""                # Which file this came from
     source_line: int = 0
 
+    # Contradiction tracking
+    contradicts: str = ""        # ID of memory this contradicts (if any)
+    contradicted_by: str = ""    # ID of memory that contradicts this one
+
     # Graph linkage
     graph_node_ids: list[str] = field(default_factory=list)  # Connected graph nodes
 
@@ -111,6 +115,8 @@ class MemoryEntry:
             "last_consolidated": self.last_consolidated,
             "source_file": self.source_file,
             "graph_node_ids": self.graph_node_ids,
+            "contradicts": self.contradicts,
+            "contradicted_by": self.contradicted_by,
         }
 
     @classmethod
@@ -131,6 +137,8 @@ class MemoryEntry:
             last_consolidated=d.get("last_consolidated"),
             source_file=d.get("source_file", ""),
             graph_node_ids=d.get("graph_node_ids", []),
+            contradicts=d.get("contradicts", ""),
+            contradicted_by=d.get("contradicted_by", ""),
         )
         return entry
 

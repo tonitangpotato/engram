@@ -33,6 +33,7 @@ from engram.confidence import confidence_score, confidence_label
 from engram.reward import detect_feedback, apply_reward
 from engram.downscaling import synaptic_downscale
 from engram.anomaly import BaselineTracker
+from engram.confidence import content_reliability
 
 # SQLiteStore imports from memory_core (different module path = different enum classes)
 # We need the memory_core versions for SQLiteStore tests
@@ -673,7 +674,88 @@ def test_anomaly_empty_baseline():
 
 
 # ═══════════════════════════════════════════
-# 9. Integration — Full Lifecycle
+# 9. Contradiction Detection
+# ═══════════════════════════════════════════
+
+def test_contradiction_basic():
+    """Add contradicting memory and verify linkage."""
+    from engram.memory import Memory
+    import tempfile, os
+    with tempfile.TemporaryDirectory() as tmpdir:
+        mem = Memory(os.path.join(tmpdir, "test.db"))
+        id1 = mem.add("moltbook.com is the API URL", type="procedural", importance=0.8)
+        id2 = mem.add("www.moltbook.com is the API URL", type="procedural",
+                       importance=0.8, contradicts=id1)
+        # Check linkage
+        old = mem._store.get(id1)
+        new = mem._store.get(id2)
+        assert old.contradicted_by == id2, f"Old should be contradicted by new, got '{old.contradicted_by}'"
+        assert new.contradicts == id1, f"New should contradict old, got '{new.contradicts}'"
+        mem.close()
+
+def test_contradiction_lowers_confidence():
+    """Contradicted memory should have lower content reliability."""
+    from engram.memory import Memory
+    import tempfile, os
+    with tempfile.TemporaryDirectory() as tmpdir:
+        mem = Memory(os.path.join(tmpdir, "test.db"))
+        id1 = mem.add("moltbook.com is the API URL", type="procedural", importance=0.8)
+        # Get reliability before contradiction
+        old_entry = mem._store.get(id1)
+        rel_before = content_reliability(old_entry)
+        # Add contradicting memory
+        id2 = mem.add("www.moltbook.com is the API URL", type="procedural",
+                       importance=0.8, contradicts=id1)
+        old_entry = mem._store.get(id1)
+        rel_after = content_reliability(old_entry)
+        assert rel_after < rel_before * 0.5, \
+            f"Contradicted reliability {rel_after} should be much lower than {rel_before}"
+        mem.close()
+
+def test_contradiction_recall_ranking():
+    """Contradicted memory should have lower confidence in recall results."""
+    from engram.memory import Memory
+    import tempfile, os
+    with tempfile.TemporaryDirectory() as tmpdir:
+        mem = Memory(os.path.join(tmpdir, "test.db"))
+        id1 = mem.add("moltbook.com is the API URL", type="procedural", importance=0.8)
+        id2 = mem.add("www.moltbook.com is the API URL", type="procedural",
+                       importance=0.8, contradicts=id1)
+        results = mem.recall("moltbook API URL", limit=5)
+        # Find both in results
+        conf_old = None
+        conf_new = None
+        for r in results:
+            if r["id"] == id1:
+                conf_old = r["confidence"]
+                assert r["contradicted"] is True
+            if r["id"] == id2:
+                conf_new = r["confidence"]
+                assert r["contradicted"] is False
+        assert conf_new is not None, "New memory should appear in results"
+        if conf_old is not None:
+            assert conf_new > conf_old, \
+                f"New memory confidence ({conf_new}) should be higher than contradicted ({conf_old})"
+        mem.close()
+
+def test_update_memory():
+    """update_memory() should create correction and link memories."""
+    from engram.memory import Memory
+    import tempfile, os
+    with tempfile.TemporaryDirectory() as tmpdir:
+        mem = Memory(os.path.join(tmpdir, "test.db"))
+        id1 = mem.add("moltbook.com is the API URL", type="procedural", importance=0.8)
+        id2 = mem.update_memory(id1, "www.moltbook.com is the API URL")
+        old = mem._store.get(id1)
+        new = mem._store.get(id2)
+        assert old.contradicted_by == id2
+        assert new.contradicts == id1
+        assert "correction" in new.source_file
+        mem.close()
+
+
+# ═══════════════════════════════════════════
+# 10. Integration — Full Lifecycle
 # ═══════════════════════════════════════════
 
 def test_full_lifecycle():
@@ -909,6 +991,12 @@ if __name__ == "__main__":
             ("z-score", test_anomaly_z_score),
             ("metrics list", test_anomaly_metrics_list),
             ("empty baseline", test_anomaly_empty_baseline),
+        ]),
+        ("Contradiction Detection", [
+            ("basic contradiction linkage", test_contradiction_basic),
+            ("contradiction lowers confidence", test_contradiction_lowers_confidence),
+            ("contradiction recall ranking", test_contradiction_recall_ranking),
+            ("update_memory method", test_update_memory),
         ]),
         ("Integration", [
             ("full lifecycle (MemoryStore)", test_full_lifecycle),

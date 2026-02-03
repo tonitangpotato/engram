@@ -66,6 +66,10 @@ def content_reliability(entry: MemoryEntry) -> float:
     type_str = entry.memory_type.value if hasattr(entry.memory_type, 'value') else str(entry.memory_type)
     base = DEFAULT_RELIABILITY.get(type_str, 0.7)
 
+    # Contradicted memories are significantly less reliable
+    if entry.contradicted_by:
+        base *= 0.3
+
     # Pinned memories are explicitly verified by human
     if entry.pinned:
         base = max(base, 0.95)

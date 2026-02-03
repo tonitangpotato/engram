@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS memories (
     pinned INTEGER DEFAULT 0,
     consolidation_count INTEGER DEFAULT 0,
     last_consolidated REAL,
-    source_file TEXT DEFAULT ''
+    source_file TEXT DEFAULT '',
+    contradicts TEXT DEFAULT '',
+    contradicted_by TEXT DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS access_log (
@@ -89,6 +91,8 @@ def _row_to_entry(row: sqlite3.Row, access_times: list[float] | None = None) -> 
         consolidation_count=row["consolidation_count"],
         last_consolidated=row["last_consolidated"],
         source_file=row["source_file"] or "",
+        contradicts=row["contradicts"] or "",
+        contradicted_by=row["contradicted_by"] or "",
     )
 
 
@@ -102,9 +106,19 @@ class SQLiteStore:
         self._conn.execute("PRAGMA journal_mode=WAL")
         self._conn.execute("PRAGMA foreign_keys=ON")
         self._conn.executescript(_SCHEMA)
+        self._migrate_contradiction_columns()
         self._conn.executescript(_FTS_SCHEMA)
         self._conn.executescript(_FTS_TRIGGERS)
         self._conn.commit()
+
+    def _migrate_contradiction_columns(self):
+        """Add contradiction columns if they don't exist (migration for older DBs)."""
+        cursor = self._conn.execute("PRAGMA table_info(memories)")
+        columns = {row[1] for row in cursor.fetchall()}
+        if "contradicts" not in columns:
+            self._conn.execute("ALTER TABLE memories ADD COLUMN contradicts TEXT DEFAULT ''")
+        if "contradicted_by" not in columns:
+            self._conn.execute("ALTER TABLE memories ADD COLUMN contradicted_by TEXT DEFAULT ''")
 
     def add(self, content: str, memory_type: MemoryType = MemoryType.FACTUAL,
             importance: Optional[float] = None, source_file: str = "") -> MemoryEntry:
@@ -119,12 +133,13 @@ class SQLiteStore:
         self._conn.execute(
             """INSERT INTO memories (id, content, summary, memory_type, layer, created_at,
                working_strength, core_strength, importance, pinned, consolidation_count,
-               last_consolidated, source_file)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+               last_consolidated, source_file, contradicts, contradicted_by)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (entry.id, entry.content, entry.summary, entry.memory_type.value,
              entry.layer.value, entry.created_at, entry.working_strength,
              entry.core_strength, entry.importance, int(entry.pinned),
-             entry.consolidation_count, entry.last_consolidated, entry.source_file),
+             entry.consolidation_count, entry.last_consolidated, entry.source_file,
+             entry.contradicts, entry.contradicted_by),
         )
         # Record initial access
         self._conn.execute(
@@ -151,12 +166,13 @@ class SQLiteStore:
         self._conn.execute(
             """UPDATE memories SET content=?, summary=?, memory_type=?, layer=?,
                working_strength=?, core_strength=?, importance=?, pinned=?,
-               consolidation_count=?, last_consolidated=?, source_file=?
+               consolidation_count=?, last_consolidated=?, source_file=?,
+               contradicts=?, contradicted_by=?
                WHERE id=?""",
             (entry.content, entry.summary, entry.memory_type.value, entry.layer.value,
              entry.working_strength, entry.core_strength, entry.importance,
              int(entry.pinned), entry.consolidation_count, entry.last_consolidated,
-             entry.source_file, entry.id),
+             entry.source_file, entry.contradicts, entry.contradicted_by, entry.id),
         )
         self._conn.commit()
 

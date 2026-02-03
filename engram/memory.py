@@ -78,7 +78,7 @@ class Memory:
 
     def add(self, content: str, type: str = "factual", importance: float = None,
             source: str = "", tags: list[str] = None,
-            entities: list = None) -> str:
+            entities: list = None, contradicts: str = None) -> str:
         """
         Store a new memory. Returns memory ID.
 
@@ -114,6 +114,17 @@ class Memory:
             importance=importance,
             source_file=source,
         )
+
+        # Handle contradiction linking
+        if contradicts:
+            old_entry = self._store.get(contradicts)
+            if old_entry:
+                entry.contradicts = contradicts
+                # Update entry in store with contradiction field
+                self._store.update(entry)
+                # Mark old memory as contradicted
+                old_entry.contradicted_by = entry.id
+                self._store.update(old_entry)
 
         # Store graph links if entities provided
         if entities:
@@ -179,6 +190,7 @@ class Memory:
                 "age_days": round(r.entry.age_days(), 1),
                 "layer": r.entry.layer.value,
                 "importance": round(r.entry.importance, 2),
+                "contradicted": bool(r.entry.contradicted_by),
             })
 
         # Track retrieval for anomaly detection
@@ -317,6 +329,30 @@ class Memory:
             path: Output file path
         """
         self._store.export(path)
+
+    def update_memory(self, memory_id: str, new_content: str, reason: str = "correction") -> str:
+        """Update a memory's content, marking the old version as contradicted.
+        Creates a new memory with the correction and links them.
+
+        Args:
+            memory_id: ID of the memory to update
+            new_content: The corrected content
+            reason: Reason for the update (stored in source)
+
+        Returns:
+            New memory ID string
+        """
+        old_entry = self._store.get(memory_id)
+        if old_entry is None:
+            raise ValueError(f"Memory {memory_id} not found")
+
+        return self.add(
+            content=new_content,
+            type=old_entry.memory_type.value,
+            importance=old_entry.importance,
+            source=f"{reason}:{memory_id}",
+            contradicts=memory_id,
+        )
 
     def pin(self, memory_id: str):
         """Pin a memory — it won't decay or be pruned."""
