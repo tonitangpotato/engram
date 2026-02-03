@@ -211,6 +211,37 @@ mem.downscale()    # Prevent runaway activation (synaptic homeostasis)
 
 That's it. Your agent now has biologically-inspired memory that strengthens with use, fades naturally, and responds to feedback.
 
+### 7. CLI (Command Line Interface)
+
+After installation, use the `neuromem` command:
+
+```bash
+# Add memories
+neuromem add "User prefers dark mode" --type preference --importance 0.8
+
+# Recall memories
+neuromem recall "user preferences"
+
+# View statistics
+neuromem stats
+
+# Run maintenance
+neuromem consolidate
+neuromem forget --threshold 0.01
+
+# List all memories
+neuromem list --limit 20
+
+# Show Hebbian links for a memory
+neuromem hebbian "dark mode"
+
+# Export database
+neuromem export backup.db
+
+# Use a different database
+neuromem --db ./custom.db add "Custom memory"
+```
+
 ---
 
 ## Quick Start
