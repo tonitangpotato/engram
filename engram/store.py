@@ -44,9 +44,20 @@ CREATE TABLE IF NOT EXISTS graph_links (
     relation TEXT DEFAULT ''
 );
 
+CREATE TABLE IF NOT EXISTS hebbian_links (
+    source_id TEXT REFERENCES memories(id) ON DELETE CASCADE,
+    target_id TEXT REFERENCES memories(id) ON DELETE CASCADE,
+    strength REAL DEFAULT 1.0,
+    coactivation_count INTEGER DEFAULT 0,
+    created_at REAL DEFAULT (strftime('%s', 'now')),
+    PRIMARY KEY (source_id, target_id)
+);
+
 CREATE INDEX IF NOT EXISTS idx_access_log_mid ON access_log(memory_id);
 CREATE INDEX IF NOT EXISTS idx_graph_links_mid ON graph_links(memory_id);
 CREATE INDEX IF NOT EXISTS idx_graph_links_nid ON graph_links(node_id);
+CREATE INDEX IF NOT EXISTS idx_hebbian_source ON hebbian_links(source_id);
+CREATE INDEX IF NOT EXISTS idx_hebbian_target ON hebbian_links(target_id);
 """
 
 _FTS_SCHEMA = """

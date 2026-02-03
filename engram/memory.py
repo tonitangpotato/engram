@@ -48,6 +48,12 @@ from engram.confidence import confidence_score, confidence_label
 from engram.reward import detect_feedback, apply_reward
 from engram.downscaling import synaptic_downscale
 from engram.anomaly import BaselineTracker
+from engram.hebbian import (
+    record_coactivation,
+    get_hebbian_neighbors,
+    get_all_hebbian_links,
+    decay_hebbian_links,
+)
 
 
 # Map string type names to MemoryType enum
@@ -199,6 +205,15 @@ class Memory:
         # Track retrieval for anomaly detection
         self._tracker.update("retrieval_count", len(output))
 
+        # Hebbian learning: record co-activation for recalled memories
+        if self.config.hebbian_enabled and len(output) >= 2:
+            memory_ids = [r["id"] for r in output]
+            record_coactivation(
+                self._store,
+                memory_ids,
+                threshold=self.config.hebbian_threshold,
+            )
+
         return output
 
     def consolidate(self, days: float = 1.0):
@@ -232,6 +247,10 @@ class Memory:
             archive_threshold=self.config.archive_threshold,
         )
         synaptic_downscale(self._store, factor=self.config.downscale_factor)
+
+        # Decay Hebbian links during consolidation
+        if self.config.hebbian_enabled:
+            decay_hebbian_links(self._store, factor=self.config.hebbian_decay)
 
     def forget(self, memory_id: str = None, threshold: float = None):
         """
@@ -383,6 +402,36 @@ class Memory:
         if entry:
             entry.pinned = False
             self._store.update(entry)
+
+    def hebbian_links(self, memory_id: str = None) -> list[tuple[str, str, float]]:
+        """
+        Get Hebbian links for a specific memory or all links.
+
+        Hebbian links are formed when memories are repeatedly recalled
+        together — "neurons that fire together, wire together."
+
+        Args:
+            memory_id: If provided, get links for this memory only.
+                      If None, get all Hebbian links.
+
+        Returns:
+            List of (source_id, target_id, strength) tuples.
+            For a specific memory_id, source_id will always be that ID.
+        """
+        if memory_id:
+            neighbors = get_hebbian_neighbors(self._store, memory_id)
+            # Fetch strengths for each neighbor
+            links = []
+            for neighbor_id in neighbors:
+                row = self._store._conn.execute(
+                    "SELECT strength FROM hebbian_links WHERE source_id=? AND target_id=?",
+                    (memory_id, neighbor_id)
+                ).fetchone()
+                if row:
+                    links.append((memory_id, neighbor_id, row[0]))
+            return links
+        else:
+            return get_all_hebbian_links(self._store)
 
     def close(self):
         """Close the underlying database connection."""

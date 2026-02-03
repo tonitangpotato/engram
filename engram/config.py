@@ -102,6 +102,14 @@ class MemoryConfig:
     # Minimum samples before anomaly detection activates
     anomaly_min_samples: int = 5
 
+    # === Hebbian learning (co-activation links) ===
+    # Enable Hebbian link formation from co-activation
+    hebbian_enabled: bool = True
+    # Number of co-activations before link forms
+    hebbian_threshold: int = 3
+    # Link strength decay per consolidation cycle
+    hebbian_decay: float = 0.95
+
     @classmethod
     def default(cls) -> "MemoryConfig":
         """Literature-based defaults (same as no-arg constructor)."""

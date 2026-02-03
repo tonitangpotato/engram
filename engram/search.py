@@ -18,6 +18,7 @@ from engram.store import SQLiteStore
 from engram.activation import retrieval_activation
 from engram.forgetting import effective_strength
 from engram.confidence import confidence_score, confidence_label
+from engram.hebbian import get_hebbian_neighbors
 
 
 @dataclass
@@ -101,9 +102,12 @@ class SearchEngine:
         return candidates
 
     def _expand_via_graph(self, candidates: list[MemoryEntry]) -> list[MemoryEntry]:
-        """Expand candidate set by finding memories that share entities with current candidates."""
+        """Expand candidate set by finding memories that share entities with current candidates,
+        and also include Hebbian-linked memories (co-activation associations)."""
         seen_ids = {c.id for c in candidates}
-        # Collect all entities from current candidates
+        new_candidates = []
+
+        # 1. Entity-based expansion
         all_entities = set()
         for c in candidates:
             for entity, _rel in self.store.get_entities(c.id):
@@ -116,12 +120,21 @@ class SearchEngine:
             expanded_entities.update(related)
 
         # Fetch memories for all entities
-        new_candidates = []
         for entity in expanded_entities:
             for entry in self.store.search_by_entity(entity):
                 if entry.id not in seen_ids:
                     seen_ids.add(entry.id)
                     new_candidates.append(entry)
+
+        # 2. Hebbian expansion: include memories linked via co-activation
+        for c in candidates:
+            hebbian_neighbors = get_hebbian_neighbors(self.store, c.id)
+            for neighbor_id in hebbian_neighbors:
+                if neighbor_id not in seen_ids:
+                    entry = self.store.get(neighbor_id)
+                    if entry:
+                        seen_ids.add(neighbor_id)
+                        new_candidates.append(entry)
 
         return candidates + new_candidates
 
