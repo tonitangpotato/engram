@@ -75,6 +75,118 @@ The math is simple. The insight is connecting it to agent memory. Total core: **
 - ⚙️ **Config presets** — tuned parameter sets for chatbot, task-agent, personal-assistant, researcher
 - 📦 **Zero dependencies** — pure Python stdlib. No numpy, no torch, no API keys.
 
+## What You Need
+
+**Just Python 3.10+.** That's it.
+
+- ❌ No API keys (OpenAI, Anthropic, etc.)
+- ❌ No vector database (Pinecone, Chroma, etc.)
+- ❌ No embedding model
+- ❌ No external services
+
+Engram is **just the memory layer**. It doesn't include an LLM — you bring your own. The insight is that your LLM already handles semantics; engram handles the *dynamics* of when to remember and what to forget.
+
+## 5-Minute Quickstart
+
+### 1. Install
+
+```bash
+pip install engram
+```
+
+### 2. Basic Usage (standalone)
+
+```python
+from engram import Memory
+
+# Create/open a memory database (SQLite file)
+mem = Memory("./my-agent.db")
+
+# Store memories with type and importance
+mem.add("User prefers concise answers", type="relational", importance=0.8)
+mem.add("API key is in environment variable", type="procedural", importance=0.9)
+mem.add("Had a good conversation about ML today", type="episodic", importance=0.5)
+
+# Recall relevant memories (ranked by ACT-R activation)
+results = mem.recall("how should I respond to user?", limit=3)
+for r in results:
+    print(f"[{r['confidence_label']}] {r['content']}")
+
+# Run daily maintenance (like sleep)
+mem.consolidate()  # Transfers working → core memory
+mem.forget()       # Prunes weak memories
+```
+
+### 3. Integrate with Your Bot
+
+Engram works with **any** LLM or bot framework. Here's the pattern:
+
+```python
+from engram import Memory
+from openai import OpenAI  # or anthropic, or local model, or whatever
+
+mem = Memory("./agent.db")
+client = OpenAI()
+
+def chat(user_message: str) -> str:
+    # 1. Recall relevant memories
+    memories = mem.recall(user_message, limit=5)
+    memory_context = "\n".join([f"- {m['content']}" for m in memories])
+    
+    # 2. Build prompt with memory context
+    messages = [
+        {"role": "system", "content": f"You have these memories:\n{memory_context}"},
+        {"role": "user", "content": user_message}
+    ]
+    
+    # 3. Call your LLM
+    response = client.chat.completions.create(model="gpt-4", messages=messages)
+    reply = response.choices[0].message.content
+    
+    # 4. Store new memories from conversation
+    mem.add(f"User asked: {user_message}", type="episodic", importance=0.3)
+    # Extract facts, preferences, etc. and store with higher importance
+    
+    return reply
+
+def on_feedback(feedback: str):
+    # 5. Learn from user feedback
+    mem.reward(feedback)  # "great answer!" strengthens, "wrong!" suppresses
+```
+
+### 4. Choose Your Preset
+
+Different agents need different memory profiles:
+
+```python
+from engram.config import MemoryConfig
+
+# Chatbot: remembers everything, slow decay
+mem = Memory("bot.db", config=MemoryConfig.chatbot())
+
+# Task agent: fast decay, focused on recent procedural knowledge
+mem = Memory("worker.db", config=MemoryConfig.task_agent())
+
+# Personal assistant: long-term memory, relationships matter
+mem = Memory("assistant.db", config=MemoryConfig.personal_assistant())
+
+# Researcher: never forgets, archives everything
+mem = Memory("research.db", config=MemoryConfig.researcher())
+```
+
+### 5. Daily Maintenance (cron job or scheduler)
+
+```python
+# Run once per day
+mem.consolidate()  # Sleep cycle: decay working memory, strengthen core
+mem.forget()       # Remove memories below threshold
+mem.downscale()    # Prevent runaway activation (synaptic homeostasis)
+```
+
+That's it. Your agent now has biologically-inspired memory that strengthens with use, fades naturally, and responds to feedback.
+
+---
+
 ## Quick Start
 
 ```bash
