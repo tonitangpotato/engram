@@ -90,13 +90,26 @@ The math is simple. The insight is connecting it to agent memory. Total core: **
 
 Engram is **just the memory layer**. It doesn't include an LLM — you bring your own. The insight is that your LLM already handles semantics; engram handles the *dynamics* of when to remember and what to forget.
 
+## Quick Comparison
+
+| Without neuromemory-ai | With neuromemory-ai |
+|------------------------|---------------------|
+| ❌ "What's your name again?" | ✅ "I remember you're Alice, you prefer Python" |
+| ❌ Retrieves irrelevant old memories | ✅ Recent memories prioritized via ACT-R |
+| ❌ Memory grows unbounded | ✅ Natural forgetting keeps signal-to-noise high |
+| ❌ Can't distinguish important from trivial | ✅ Importance weights consolidation |
+| ❌ No learning from co-occurrence | ✅ Hebbian links form from usage patterns |
+
 ## 5-Minute Quickstart
 
 ### 1. Install
 
-```bash
-pip install neuromemory-ai
-```
+| Platform | Install | Documentation |
+|----------|---------|---------------|
+| Python | `pip install neuromemory-ai` | [PyPI](https://pypi.org/project/neuromemory-ai/) |
+| TypeScript | `npm install neuromemory-ai` | [npm](https://www.npmjs.com/package/neuromemory-ai) |
+| MCP Server | `python -m engram.mcp_server` | [MCP Setup](#mcp-integration) |
+| CLI | `neuromem --help` | [CLI Docs](#cli-usage) |
 
 ### 2. Basic Usage (standalone)
 

@@ -367,10 +367,21 @@ export class SQLiteStore {
   }
 
   getHebbianNeighbors(memoryId: string): string[] {
-    const rows = this.db.prepare(
-      'SELECT target_id FROM hebbian_links WHERE source_id = ? AND strength > 0'
-    ).all(memoryId) as Array<{ target_id: string }>;
-    return rows.map(r => r.target_id);
+    // Get neighbors where this memory is the source
+    const asSource = this.db.prepare(
+      'SELECT target_id as neighbor FROM hebbian_links WHERE source_id = ? AND strength > 0'
+    ).all(memoryId) as Array<{ neighbor: string }>;
+    
+    // Also get neighbors where this memory is the target
+    const asTarget = this.db.prepare(
+      'SELECT source_id as neighbor FROM hebbian_links WHERE target_id = ? AND strength > 0'
+    ).all(memoryId) as Array<{ neighbor: string }>;
+    
+    // Combine and dedupe
+    const neighbors = new Set<string>();
+    for (const r of asSource) neighbors.add(r.neighbor);
+    for (const r of asTarget) neighbors.add(r.neighbor);
+    return Array.from(neighbors);
   }
 
   getAllHebbianLinks(): Array<{ sourceId: string; targetId: string; strength: number }> {
