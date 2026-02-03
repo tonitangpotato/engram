@@ -7,3 +7,6 @@ build/
 .eggs/
 *.egg
 # .gid/
+
+# Benchmark outputs
+benchmarks/locomo_predictions.json
