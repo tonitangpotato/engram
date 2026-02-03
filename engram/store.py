@@ -132,7 +132,8 @@ class SQLiteStore:
             self._conn.execute("ALTER TABLE memories ADD COLUMN contradicted_by TEXT DEFAULT ''")
 
     def add(self, content: str, memory_type: MemoryType = MemoryType.FACTUAL,
-            importance: Optional[float] = None, source_file: str = "") -> MemoryEntry:
+            importance: Optional[float] = None, source_file: str = "",
+            created_at: Optional[float] = None) -> MemoryEntry:
         entry = MemoryEntry(
             content=content,
             memory_type=memory_type,
@@ -141,6 +142,9 @@ class SQLiteStore:
             core_strength=0.0,
             source_file=source_file,
         )
+        # Override created_at if provided (for temporal simulation)
+        if created_at is not None:
+            entry.created_at = created_at
         self._conn.execute(
             """INSERT INTO memories (id, content, summary, memory_type, layer, created_at,
                working_strength, core_strength, importance, pinned, consolidation_count,

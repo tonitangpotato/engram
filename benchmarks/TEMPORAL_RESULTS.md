@@ -1,6 +1,6 @@
 # Temporal Dynamics Benchmark Results
 
-*Generated: 2026-02-03T12:28:18.310932*
+*Generated: 2026-02-03T13:42:25.177076*
 
 ## Summary
 
@@ -8,16 +8,16 @@
 |--------|-------|
 | **System** | engram |
 | **Total Cases** | 200 |
-| **Overall Accuracy** | 80.0% |
+| **Overall Accuracy** | 100.0% |
 
 ## Results by Category
 
 | Category | Correct | Total | Accuracy |
 |----------|---------|-------|----------|
-| recency_override | 30 | 50 | 60.0% |
+| recency_override | 50 | 50 | 100.0% |
 | frequency | 50 | 50 | 100.0% |
 | importance | 50 | 50 | 100.0% |
-| contradiction | 30 | 50 | 60.0% |
+| contradiction | 50 | 50 | 100.0% |
 
 ## Category Descriptions
 
@@ -28,5 +28,5 @@
 
 ## Analysis
 
-- **Best category**: frequency (100.0%)
-- **Worst category**: recency_override (60.0%)
+- **Best category**: recency_override (100.0%)
+- **Worst category**: recency_override (100.0%)

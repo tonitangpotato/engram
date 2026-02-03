@@ -77,14 +77,18 @@ def retrieval_activation(entry: MemoryEntry, context_keywords: list[str] = None,
                          now: Optional[float] = None,
                          base_decay: float = 0.5,
                          context_weight: float = 1.5,
-                         importance_weight: float = 0.5) -> float:
+                         importance_weight: float = 2.0,
+                         contradiction_penalty: float = 3.0) -> float:
     """
     Full retrieval activation score.
 
-    A_i = B_i + context_match + importance_boost
+    A_i = B_i + context_match + importance_boost - contradiction_penalty
 
     Combines ACT-R base-level with context spreading activation
     and emotional/importance modulation.
+    
+    Memories that have been contradicted by newer information receive
+    a penalty to their activation, making them less likely to be retrieved.
     """
     base = base_level_activation(entry, now=now, decay=base_decay)
 
@@ -97,8 +101,14 @@ def retrieval_activation(entry: MemoryEntry, context_keywords: list[str] = None,
 
     # Importance modulation (amygdala analog)
     importance_boost = entry.importance * importance_weight
+    
+    # Contradiction penalty: if this memory has been contradicted by a newer one,
+    # reduce its activation significantly
+    penalty = 0.0
+    if entry.contradicted_by:
+        penalty = contradiction_penalty
 
-    return base + context + importance_boost
+    return base + context + importance_boost - penalty
 
 
 def retrieve_top_k(store: MemoryStore, context_keywords: list[str] = None,

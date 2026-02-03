@@ -128,7 +128,8 @@ class Memory:
 
     def add(self, content: str, type: str = "factual", importance: float = None,
             source: str = "", tags: list[str] = None,
-            entities: list = None, contradicts: str = None) -> str:
+            entities: list = None, contradicts: str = None,
+            created_at: float = None) -> str:
         """
         Store a new memory. Returns memory ID.
 
@@ -163,6 +164,7 @@ class Memory:
             memory_type=memory_type,
             importance=importance,
             source_file=source,
+            created_at=created_at,
         )
 
         # Handle contradiction linking

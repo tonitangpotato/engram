@@ -67,21 +67,24 @@ def evaluate_temporal_benchmark(
         "contradiction": {"correct": 0, "total": 0, "details": []},
     }
     
-    base_time = datetime.now() - timedelta(days=30)
+    base_time = time.time() - (30 * 24 * 3600)  # 30 days ago in epoch seconds
     
     for case in cases:
         # Fresh memory instance per case
         client = Memory(":memory:")
         
         # Add memories with simulated timestamps
+        # CRITICAL: Use created_at to properly simulate temporal order
+        memory_ids = []
         for event in case["setup"]:
-            event_time = base_time + timedelta(days=event["day"])
-            # Store memory
-            client.add(
+            event_timestamp = base_time + (event["day"] * 24 * 3600)  # Convert days to seconds
+            # Store memory with proper timestamp
+            mem_id = client.add(
                 content=event["memory"],
                 importance=event.get("importance", 0.5),
+                created_at=event_timestamp,  # KEY FIX: pass the simulated timestamp
             )
-            # Manually update timestamp if needed (ACT-R uses internal timing)
+            memory_ids.append(mem_id)
         
         # Query at "day 30"
         sanitized_query = sanitize_fts_query(case["query"])

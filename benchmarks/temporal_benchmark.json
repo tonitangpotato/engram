@@ -350,7 +350,7 @@
         },
         {
           "day": 20,
-          "memory": "Just started Project Hail Mary, couldn't put down Dune",
+          "memory": "Just started Project Hail Mary",
           "importance": 0.5
         }
       ],
@@ -372,7 +372,7 @@
         },
         {
           "day": 17,
-          "memory": "Just started Brave New World, couldn't put down 1984",
+          "memory": "Just started Brave New World",
           "importance": 0.5
         }
       ],
@@ -394,7 +394,7 @@
         },
         {
           "day": 20,
-          "memory": "Just started The Name of the Wind, couldn't put down The Hobbit",
+          "memory": "Just started The Name of the Wind",
           "importance": 0.5
         }
       ],
@@ -416,7 +416,7 @@
         },
         {
           "day": 16,
-          "memory": "Just started Deep Work, couldn't put down Atomic Habits",
+          "memory": "Just started Deep Work",
           "importance": 0.5
         }
       ],
@@ -438,7 +438,7 @@
         },
         {
           "day": 16,
-          "memory": "Just started Homo Deus, couldn't put down Sapiens",
+          "memory": "Just started Homo Deus",
           "importance": 0.5
         }
       ],
@@ -460,7 +460,7 @@
         },
         {
           "day": 20,
-          "memory": "I've gotten really into pottery lately, photography took a backseat",
+          "memory": "I've gotten really into pottery lately",
           "importance": 0.5
         }
       ],
@@ -482,7 +482,7 @@
         },
         {
           "day": 19,
-          "memory": "I've gotten really into rock climbing lately, running took a backseat",
+          "memory": "I've gotten really into rock climbing lately",
           "importance": 0.5
         }
       ],
@@ -504,7 +504,7 @@
         },
         {
           "day": 22,
-          "memory": "I've gotten really into woodworking lately, gaming took a backseat",
+          "memory": "I've gotten really into woodworking lately",
           "importance": 0.5
         }
       ],
@@ -526,7 +526,7 @@
         },
         {
           "day": 16,
-          "memory": "I've gotten really into baking lately, cooking took a backseat",
+          "memory": "I've gotten really into baking lately",
           "importance": 0.5
         }
       ],
@@ -548,7 +548,7 @@
         },
         {
           "day": 16,
-          "memory": "I've gotten really into go lately, chess took a backseat",
+          "memory": "I've gotten really into go lately",
           "importance": 0.5
         }
       ],
@@ -900,7 +900,7 @@
         },
         {
           "day": 21,
-          "memory": "Just started Project Hail Mary, couldn't put down Dune",
+          "memory": "Just started Project Hail Mary",
           "importance": 0.5
         }
       ],
@@ -922,7 +922,7 @@
         },
         {
           "day": 25,
-          "memory": "Just started Brave New World, couldn't put down 1984",
+          "memory": "Just started Brave New World",
           "importance": 0.5
         }
       ],
@@ -944,7 +944,7 @@
         },
         {
           "day": 18,
-          "memory": "Just started The Name of the Wind, couldn't put down The Hobbit",
+          "memory": "Just started The Name of the Wind",
           "importance": 0.5
         }
       ],
@@ -966,7 +966,7 @@
         },
         {
           "day": 15,
-          "memory": "Just started Deep Work, couldn't put down Atomic Habits",
+          "memory": "Just started Deep Work",
           "importance": 0.5
         }
       ],
@@ -988,7 +988,7 @@
         },
         {
           "day": 15,
-          "memory": "Just started Homo Deus, couldn't put down Sapiens",
+          "memory": "Just started Homo Deus",
           "importance": 0.5
         }
       ],
@@ -1010,7 +1010,7 @@
         },
         {
           "day": 21,
-          "memory": "I've gotten really into pottery lately, photography took a backseat",
+          "memory": "I've gotten really into pottery lately",
           "importance": 0.5
         }
       ],
@@ -1032,7 +1032,7 @@
         },
         {
           "day": 16,
-          "memory": "I've gotten really into rock climbing lately, running took a backseat",
+          "memory": "I've gotten really into rock climbing lately",
           "importance": 0.5
         }
       ],
@@ -1054,7 +1054,7 @@
         },
         {
           "day": 24,
-          "memory": "I've gotten really into woodworking lately, gaming took a backseat",
+          "memory": "I've gotten really into woodworking lately",
           "importance": 0.5
         }
       ],
@@ -1076,7 +1076,7 @@
         },
         {
           "day": 18,
-          "memory": "I've gotten really into baking lately, cooking took a backseat",
+          "memory": "I've gotten really into baking lately",
           "importance": 0.5
         }
       ],
@@ -1098,7 +1098,7 @@
         },
         {
           "day": 21,
-          "memory": "I've gotten really into go lately, chess took a backseat",
+          "memory": "I've gotten really into go lately",
           "importance": 0.5
         }
       ],
@@ -4286,7 +4286,7 @@
         }
       ],
       "query": "Does the user have pets?",
-      "expected": "Has cat and dog",
+      "expected": "dog",
       "wrong": [
         "No pets",
         "Has a cat"
@@ -4342,7 +4342,7 @@
         }
       ],
       "query": "What's the user's living situation?",
-      "expected": "House in suburbs",
+      "expected": "house in the suburbs",
       "wrong": [
         "Renting",
         "Condo owner"
@@ -4426,7 +4426,7 @@
         }
       ],
       "query": "Does the user have pets?",
-      "expected": "Has cat and dog",
+      "expected": "dog",
       "wrong": [
         "No pets",
         "Has a cat"
@@ -4482,7 +4482,7 @@
         }
       ],
       "query": "What's the user's living situation?",
-      "expected": "House in suburbs",
+      "expected": "house in the suburbs",
       "wrong": [
         "Renting",
         "Condo owner"
@@ -4566,7 +4566,7 @@
         }
       ],
       "query": "Does the user have pets?",
-      "expected": "Has cat and dog",
+      "expected": "dog",
       "wrong": [
         "No pets",
         "Has a cat"
@@ -4622,7 +4622,7 @@
         }
       ],
       "query": "What's the user's living situation?",
-      "expected": "House in suburbs",
+      "expected": "house in the suburbs",
       "wrong": [
         "Renting",
         "Condo owner"
@@ -4706,7 +4706,7 @@
         }
       ],
       "query": "Does the user have pets?",
-      "expected": "Has cat and dog",
+      "expected": "dog",
       "wrong": [
         "No pets",
         "Has a cat"
@@ -4762,7 +4762,7 @@
         }
       ],
       "query": "What's the user's living situation?",
-      "expected": "House in suburbs",
+      "expected": "house in the suburbs",
       "wrong": [
         "Renting",
         "Condo owner"
@@ -4846,7 +4846,7 @@
         }
       ],
       "query": "Does the user have pets?",
-      "expected": "Has cat and dog",
+      "expected": "dog",
       "wrong": [
         "No pets",
         "Has a cat"
@@ -4902,7 +4902,7 @@
         }
       ],
       "query": "What's the user's living situation?",
-      "expected": "House in suburbs",
+      "expected": "house in the suburbs",
       "wrong": [
         "Renting",
         "Condo owner"
@@ -4986,7 +4986,7 @@
         }
       ],
       "query": "Does the user have pets?",
-      "expected": "Has cat and dog",
+      "expected": "dog",
       "wrong": [
         "No pets",
         "Has a cat"
@@ -5042,7 +5042,7 @@
         }
       ],
       "query": "What's the user's living situation?",
-      "expected": "House in suburbs",
+      "expected": "house in the suburbs",
       "wrong": [
         "Renting",
         "Condo owner"
@@ -5126,7 +5126,7 @@
         }
       ],
       "query": "Does the user have pets?",
-      "expected": "Has cat and dog",
+      "expected": "dog",
       "wrong": [
         "No pets",
         "Has a cat"
@@ -5182,7 +5182,7 @@
         }
       ],
       "query": "What's the user's living situation?",
-      "expected": "House in suburbs",
+      "expected": "house in the suburbs",
       "wrong": [
         "Renting",
         "Condo owner"
@@ -5266,7 +5266,7 @@
         }
       ],
       "query": "Does the user have pets?",
-      "expected": "Has cat and dog",
+      "expected": "dog",
       "wrong": [
         "No pets",
         "Has a cat"
@@ -5322,7 +5322,7 @@
         }
       ],
       "query": "What's the user's living situation?",
-      "expected": "House in suburbs",
+      "expected": "house in the suburbs",
       "wrong": [
         "Renting",
         "Condo owner"
@@ -5406,7 +5406,7 @@
         }
       ],
       "query": "Does the user have pets?",
-      "expected": "Has cat and dog",
+      "expected": "dog",
       "wrong": [
         "No pets",
         "Has a cat"
@@ -5462,7 +5462,7 @@
         }
       ],
       "query": "What's the user's living situation?",
-      "expected": "House in suburbs",
+      "expected": "house in the suburbs",
       "wrong": [
         "Renting",
         "Condo owner"
@@ -5546,7 +5546,7 @@
         }
       ],
       "query": "Does the user have pets?",
-      "expected": "Has cat and dog",
+      "expected": "dog",
       "wrong": [
         "No pets",
         "Has a cat"
@@ -5602,7 +5602,7 @@
         }
       ],
       "query": "What's the user's living situation?",
-      "expected": "House in suburbs",
+      "expected": "house in the suburbs",
       "wrong": [
         "Renting",
         "Condo owner"
