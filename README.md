@@ -553,6 +553,48 @@ python -m engram.mcp_server --db ./agent.db
 
 *MCP server provides 7 tools: store, recall, consolidate, forget, reward, stats, export.*
 
+## AI Agent Integration
+
+For AI agents to use engram effectively, they need clear instructions on **when** to call each operation.
+
+### When to Call What
+
+| Trigger | Action | Example |
+|---------|--------|---------|
+| Learn user preference | `store(type="relational")` | "User prefers concise answers" |
+| Learn important fact | `store(type="factual")` | "Project uses Python 3.12" |
+| Question about history | `recall()` first, then answer | "What did I say about X?" |
+| User satisfied | `reward("positive feedback")` | Strengthens recent memories |
+| User unsatisfied | `reward("negative feedback")` | Suppresses recent memories |
+| Daily maintenance | `consolidate()` + `forget()` | Run via cron or heartbeat |
+
+### Hybrid Mode (Recommended)
+
+Use engram alongside file-based logging for best of both worlds:
+
+- **engram**: Active memory — retrieval, associations, dynamic weighting
+- **Files**: Logs — transparency, debugging, manual editing
+
+### Agent Config Example
+
+Add to your agent's system prompt or config:
+
+```markdown
+## Memory System
+
+When learning important information:
+- Call engram.store with appropriate type and importance
+
+Before answering questions about past conversations:
+- Call engram.recall to retrieve relevant memories
+
+Daily maintenance (heartbeat/cron):
+- engram.consolidate — run once per day
+- engram.forget --threshold 0.01 — prune weak memories
+```
+
+For detailed integration patterns, see [docs/USAGE.md](./docs/USAGE.md#ai-agent-集成模式).
+
 ## API Reference
 
 ### `Memory(path)`
