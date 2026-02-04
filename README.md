@@ -1,11 +1,11 @@
-# neuromemory-ai 🧠
+# engramai 🧠
 
 *Neuroscience-grounded memory for AI agents*
 
 > **engram** /ˈɛnɡræm/ — a hypothesized physical trace in the brain that stores a memory. First proposed by Richard Semon (1904), the engram represents the idea that experiences leave lasting biological changes in neural tissue. We chose this name because, like its neuroscience namesake, this library treats memories not as static records but as living traces that strengthen, fade, and interact over time.
 
-[![PyPI](https://img.shields.io/pypi/v/neuromemory-ai.svg)](https://pypi.org/project/neuromemory-ai/)
-[![npm](https://img.shields.io/npm/v/neuromemory-ai.svg)](https://www.npmjs.com/package/neuromemory-ai)
+[![PyPI](https://img.shields.io/pypi/v/engramai.svg)](https://pypi.org/project/engramai/)
+[![npm](https://img.shields.io/npm/v/engramai.svg)](https://www.npmjs.com/package/engramai)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://python.org)
 [![TypeScript](https://img.shields.io/badge/typescript-5.0%2B-blue.svg)](https://typescriptlang.org)
@@ -13,7 +13,7 @@
 
 ---
 
-**neuromemory-ai** gives AI agents memory that actually works — using real mathematical models from cognitive science instead of naive embeddings and cosine similarity.
+**engramai** gives AI agents memory that actually works — using real mathematical models from cognitive science instead of naive embeddings and cosine similarity.
 
 ```python
 from engram import Memory
@@ -139,7 +139,7 @@ Best for: Production deployments needing semantic retrieval. Supports OpenAI, se
 
 ## Quick Comparison
 
-| Without neuromemory-ai | With neuromemory-ai |
+| Without engramai | With engramai |
 |------------------------|---------------------|
 | ❌ "What's your name again?" | ✅ "I remember you're Alice, you prefer Python" |
 | ❌ Retrieves irrelevant old memories | ✅ Recent memories prioritized via ACT-R |
@@ -153,8 +153,8 @@ Best for: Production deployments needing semantic retrieval. Supports OpenAI, se
 
 | Platform | Install | Documentation |
 |----------|---------|---------------|
-| Python | `pip install neuromemory-ai` | [PyPI](https://pypi.org/project/neuromemory-ai/) |
-| TypeScript | `npm install neuromemory-ai` | [npm](https://www.npmjs.com/package/neuromemory-ai) |
+| Python | `pip install engramai` | [PyPI](https://pypi.org/project/engramai/) |
+| TypeScript | `npm install engramai` | [npm](https://www.npmjs.com/package/engramai) |
 | MCP Server | `python -m engram.mcp_server` | [MCP Setup](#mcp-integration) |
 | CLI | `neuromem --help` | [CLI Docs](#cli-usage) |
 
@@ -307,7 +307,7 @@ neuromem --db ./custom.db add "Custom memory"
 ## Quick Start
 
 ```bash
-pip install neuromemory-ai
+pip install engramai
 ```
 
 ```python
@@ -432,7 +432,7 @@ All three are designed for **LLM agents** — the comparison is about what *addi
 
 **1. Install**
 ```bash
-pip install neuromemory-ai
+pip install engramai
 ```
 
 **2. Configure MCP Server**
@@ -485,16 +485,16 @@ For **Cursor**, edit `.cursor/mcp.json` in your project:
 
 ### For Clawdbot Users
 
-Clawdbot is an AI agent platform. You can integrate neuromemory-ai as a cognitive memory backend.
+Clawdbot is an AI agent platform. You can integrate engramai as a cognitive memory backend.
 
 **Option 1: Use CLI via Skill**
 
 ```bash
 # Install the package
-pip install neuromemory-ai
+pip install engramai
 
 # Install the Clawdbot skill
-clawdhub install neuromemory-ai
+clawdhub install engramai
 ```
 
 Then just talk to your agent naturally:
@@ -522,7 +522,7 @@ This gives your agent direct MCP tool access to store/recall memories.
 
 **Option 3: Replace Native Memory System**
 
-To fully replace Clawdbot's file-based memory (MEMORY.md) with neuromemory-ai:
+To fully replace Clawdbot's file-based memory (MEMORY.md) with engramai:
 
 1. Configure MCP as above
 2. Update `AGENTS.md` to instruct the agent:
@@ -712,8 +712,8 @@ NeuromemoryAI uses a **pluggable storage architecture**. The core philosophy is 
 - [x] Contradiction detection & correction chains
 - [x] Configurable parameters with agent-type presets
 - [x] 89 tests (unit + e2e lifecycle)
-- [x] TypeScript port (`npm install neuromemory-ai`)
-- [x] PyPI publish (v0.1.1) (`pip install neuromemory-ai`)
+- [x] TypeScript port (`npm install engramai`)
+- [x] PyPI publish (v0.1.1) (`pip install engramai`)
 - [ ] Pluggable store backends (Supabase, Turso, Postgres)
 - [x] Benchmarks: LoCoMo (MRR 0.255) and Temporal Dynamics (80% accuracy)
 - [ ] Consolidation summaries via LLM (compress episodic → factual)
@@ -724,7 +724,7 @@ NeuromemoryAI uses a **pluggable storage architecture**. The core philosophy is 
 A TypeScript/JavaScript port is available in the `engram-ts/` directory. It provides the same neuroscience-grounded memory models with a native Node.js/Bun API.
 
 ```bash
-npm install neuromemory-ai
+npm install engramai
 ```
 
 For TypeScript-specific documentation, see [engram-ts/README.md](./engram-ts/README.md).
@@ -781,7 +781,7 @@ If you use Engram in academic work, please cite:
   title = {Engram: Neuroscience-Grounded Memory for AI Agents},
   author = {Tang, Potato},
   year = {2025},
-  url = {https://github.com/tonitangpotato/neuromemory-ai},
+  url = {https://github.com/tonitangpotato/engramai},
   note = {Open-source memory system implementing ACT-R, Memory Chain Model, and Ebbinghaus forgetting curves for AI agents}
 }
 ```

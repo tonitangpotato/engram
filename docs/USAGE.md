@@ -1,4 +1,4 @@
-# neuromemory-ai 使用指南
+# engramai 使用指南
 
 *完整的集成和使用文档*
 
@@ -24,13 +24,13 @@
 ### Python
 
 ```bash
-pip install neuromemory-ai
+pip install engramai
 ```
 
 ### TypeScript/Node.js
 
 ```bash
-npm install neuromemory-ai
+npm install engramai
 ```
 
 ### 验证安装
@@ -71,10 +71,10 @@ mem.forget()       # 清理弱记忆
 
 ### Claude Desktop 配置
 
-**1. 确保已安装 neuromemory-ai**
+**1. 确保已安装 engramai**
 
 ```bash
-pip install neuromemory-ai
+pip install engramai
 ```
 
 **2. 编辑配置文件**
@@ -143,15 +143,15 @@ Claude 现在可以使用以下工具：
 
 ## Clawdbot 用户指南
 
-Clawdbot 是一个 AI agent 平台，支持多种方式集成 neuromemory-ai。
+Clawdbot 是一个 AI agent 平台，支持多种方式集成 engramai。
 
 ### 方式一：CLI Skill（最简单）
 
 **安装**
 
 ```bash
-pip install neuromemory-ai
-clawdhub install neuromemory-ai
+pip install engramai
+clawdhub install engramai
 ```
 
 **使用**
@@ -165,7 +165,7 @@ clawdhub install neuromemory-ai
 | "整理一下你的记忆" | `neuromem consolidate` |
 | "你记了多少东西？" | `neuromem stats` |
 
-这种方式下，agent 通过 CLI 调用 neuromemory-ai，不需要修改配置。
+这种方式下，agent 通过 CLI 调用 engramai，不需要修改配置。
 
 ### 方式二：MCP 集成（更深度）
 
@@ -197,7 +197,7 @@ Clawdbot 默认使用文件系统存储记忆：
 - `MEMORY.md` — 长期记忆
 - `memory/*.md` — 每日笔记
 
-要用 neuromemory-ai 完全替换这套系统：
+要用 engramai 完全替换这套系统：
 
 **1. 配置 MCP（同方式二）**
 
@@ -245,7 +245,7 @@ with open("MEMORY.md") as f:
 
 ### 两种记忆系统对比
 
-| 特性 | 文件系统（原生） | neuromemory-ai |
+| 特性 | 文件系统（原生） | engramai |
 |------|----------------|----------------|
 | 存储 | Markdown 文件 | SQLite 数据库 |
 | 遗忘 | 手动清理 | 自动遗忘曲线 |
@@ -598,7 +598,7 @@ mem._store.conn.execute("PRAGMA journal_mode=WAL")
 **问题:** Claude Desktop 找不到 MCP 服务器
 
 **排查:**
-1. 确认 neuromemory-ai 已安装: `pip show neuromemory-ai`
+1. 确认 engramai 已安装: `pip show engramai`
 2. 确认 python3 路径正确: `which python3`
 3. 检查配置文件 JSON 格式是否正确
 4. 查看 Claude Desktop 日志
@@ -608,7 +608,7 @@ mem._store.conn.execute("PRAGMA journal_mode=WAL")
 **问题:** 召回的记忆不相关
 
 **解决:**
-1. 尝试启用 embedding: `pip install neuromemory-ai[embeddings]`
+1. 尝试启用 embedding: `pip install engramai[embeddings]`
 2. 添加更多上下文关键词到查询
 3. 检查记忆类型是否正确
 
@@ -625,10 +625,10 @@ mem._store.conn.execute("PRAGMA journal_mode=WAL")
 
 ## 链接
 
-- **PyPI:** https://pypi.org/project/neuromemory-ai/
-- **npm:** https://www.npmjs.com/package/neuromemory-ai
-- **GitHub:** https://github.com/tonitangpotato/neuromemory-ai
-- **Issues:** https://github.com/tonitangpotato/neuromemory-ai/issues
+- **PyPI:** https://pypi.org/project/engramai/
+- **npm:** https://www.npmjs.com/package/engramai
+- **GitHub:** https://github.com/tonitangpotato/engramai
+- **Issues:** https://github.com/tonitangpotato/engramai/issues
 
 ---
 

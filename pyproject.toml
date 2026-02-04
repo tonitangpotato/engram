@@ -3,8 +3,8 @@ requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "neuromemory-ai"
-version = "0.2.1"
+name = "engramai"
+version = "0.3.0"
 description = "Neuroscience-grounded memory for AI agents"
 readme = "README.md"
 license = "AGPL-3.0-only"
