@@ -12,6 +12,7 @@ Pipeline:
 import time
 from dataclasses import dataclass
 from typing import Optional
+import re
 
 from engram.core import MemoryEntry, MemoryType, MemoryLayer
 from engram.store import SQLiteStore
@@ -28,6 +29,16 @@ class SearchResult:
     confidence: float       # 0-1 metacognitive confidence
     confidence_label: str   # "certain"/"likely"/"uncertain"/"vague"
     relevance: float        # FTS5 relevance component (0 if no query)
+
+
+
+def sanitize_fts_query(query: str) -> str:
+    """Sanitize query for FTS5 by removing special characters."""
+    sanitized = re.sub(r'[^a-zA-Z0-9\s]', ' ', query)
+    sanitized = re.sub(r'\s+', ' ', sanitized).strip()
+    if not sanitized:
+        return "memory"
+    return sanitized
 
 
 class SearchEngine:
@@ -81,7 +92,9 @@ class SearchEngine:
         query = query.strip()
 
         if query:
-            candidates = self.store.search_fts(query, limit=100)
+            # Sanitize query to avoid FTS5 syntax errors
+            sanitized_query = sanitize_fts_query(query)
+            candidates = self.store.search_fts(sanitized_query, limit=100)
             # Fall back to full scan if FTS returns nothing
             if not candidates:
                 candidates = self.store.all()
