@@ -156,17 +156,15 @@ def hebbian_links(memory_id: str) -> dict:
     """Get memories linked via Hebbian learning (co-activation patterns)."""
     mem = _get_mem()
     from engram.hebbian import get_hebbian_neighbors
-    links = get_hebbian_neighbors(mem._store, memory_id)
+    neighbor_ids = get_hebbian_neighbors(mem._store, memory_id)
     # Get content for linked memories
     linked_memories = []
-    for link in links:
-        entry = mem._store.get(link["target_id"])
+    for neighbor_id in neighbor_ids:
+        entry = mem._store.get(neighbor_id)
         if entry:
             linked_memories.append({
-                "id": link["target_id"],
+                "id": neighbor_id,
                 "content": entry.content[:100] + "..." if len(entry.content) > 100 else entry.content,
-                "strength": link["strength"],
-                "coactivation_count": link["coactivation_count"],
             })
     return {
         "source_id": memory_id,
@@ -179,18 +177,17 @@ def hebbian_links(memory_id: str) -> dict:
 def all_hebbian_links() -> dict:
     """Get all Hebbian associations formed through co-activation."""
     mem = _get_mem()
-    from engram.hebbian import get_all_links
-    links = get_all_links(mem._store)
+    from engram.hebbian import get_all_hebbian_links
+    links = get_all_hebbian_links(mem._store)
     return {
         "total_links": len(links),
         "links": [
             {
-                "source": l["source_id"],
-                "target": l["target_id"],
-                "strength": l["strength"],
-                "coactivations": l["coactivation_count"],
+                "source": source_id,
+                "target": target_id,
+                "strength": strength,
             }
-            for l in links[:50]  # Limit to 50 for response size
+            for source_id, target_id, strength in links[:50]  # Limit to 50 for response size
         ],
     }
 
