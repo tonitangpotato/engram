@@ -57,6 +57,7 @@ from engram.hebbian import (
     get_all_hebbian_links,
     decay_hebbian_links,
 )
+from engram.adaptive_tuning import AdaptiveTuner
 
 
 # Map string type names to MemoryType enum
@@ -78,6 +79,7 @@ class Memory:
         path: str = "./engram.db", 
         config: MemoryConfig = None,
         embedding = None,
+        adaptive_tuning: bool = False,
     ):
         """
         Initialize Engram memory system.
@@ -91,12 +93,18 @@ class Memory:
                       - "openai" -> OpenAIAdapter (requires OPENAI_API_KEY)
                       - "ollama" -> OllamaAdapter (requires local Ollama)
                       - None -> FTS5-only mode (no embeddings)
+            adaptive_tuning: Enable automatic parameter tuning based on performance.
         """
         self.path = path
         self.config = config or MemoryConfig.default()
         self._store = SQLiteStore(path)
         self._tracker = BaselineTracker(window_size=self.config.anomaly_window_size)
         self._created_at = time.time()
+        
+        # Adaptive tuning (optional)
+        self._adaptive_tuner = None
+        if adaptive_tuning:
+            self._adaptive_tuner = AdaptiveTuner(self.config)
         
         # Initialize embedding support
         self._embedding_adapter = None
@@ -270,6 +278,16 @@ class Memory:
                 memory_ids,
                 threshold=self.config.hebbian_threshold,
             )
+        
+        # Adaptive tuning: record recall metrics
+        if self._adaptive_tuner is not None:
+            self._adaptive_tuner.record_recall(output)
+            # Auto-adapt if ready
+            if self._adaptive_tuner.should_adapt():
+                changes = self._adaptive_tuner.adapt()
+                if changes:
+                    # Log parameter changes (could emit event here)
+                    pass
 
         return output
 
@@ -293,6 +311,9 @@ class Memory:
         Args:
             days: Simulated time step in days (1.0 = one day of consolidation)
         """
+        # Track count before consolidation
+        n_memories_before = len(self._store.all())
+        
         run_consolidation_cycle(
             self._store, dt_days=days,
             interleave_ratio=self.config.interleave_ratio,
@@ -308,6 +329,12 @@ class Memory:
         # Decay Hebbian links during consolidation
         if self.config.hebbian_enabled:
             decay_hebbian_links(self._store, factor=self.config.hebbian_decay)
+        
+        # Adaptive tuning: record consolidation metrics
+        if self._adaptive_tuner is not None:
+            n_memories_after = len(self._store.all())
+            n_forgotten = max(0, n_memories_before - n_memories_after)
+            self._adaptive_tuner.record_consolidation(n_forgotten)
 
     def forget(self, memory_id: str = None, threshold: float = None):
         """
@@ -353,6 +380,10 @@ class Memory:
 
         apply_reward(self._store, polarity, recent_n=recent_n,
                      reward_magnitude=self.config.reward_magnitude * conf)
+        
+        # Adaptive tuning: record reward feedback
+        if self._adaptive_tuner is not None:
+            self._adaptive_tuner.record_reward(polarity)
 
     def downscale(self, factor: float = None):
         """
@@ -404,7 +435,7 @@ class Memory:
                     ),
                 }
 
-        return {
+        stats_dict = {
             "total_memories": len(all_mem),
             "by_type": by_type,
             "layers": consolidation["layers"],
@@ -412,6 +443,12 @@ class Memory:
             "uptime_hours": round((now - self._created_at) / 3600, 1),
             "anomaly_metrics": self._tracker.metrics(),
         }
+        
+        # Add adaptive tuning metrics if enabled
+        if self._adaptive_tuner is not None:
+            stats_dict["adaptive_tuning"] = self._adaptive_tuner.get_metrics()
+        
+        return stats_dict
 
     def export(self, path: str):
         """

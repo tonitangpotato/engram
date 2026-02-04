@@ -21,6 +21,7 @@ Usage:
 from engram.memory import Memory
 from engram.config import MemoryConfig
 from engram.core import MemoryType, MemoryLayer, MemoryEntry, MemoryStore
+from engram.adaptive_tuning import AdaptiveTuner, AdaptiveMetrics
 
-__all__ = ["Memory", "MemoryConfig", "MemoryType", "MemoryLayer", "MemoryEntry", "MemoryStore"]
+__all__ = ["Memory", "MemoryConfig", "MemoryType", "MemoryLayer", "MemoryEntry", "MemoryStore", "AdaptiveTuner", "AdaptiveMetrics"]
 __version__ = "0.2.0"  # Bumped for embedding support

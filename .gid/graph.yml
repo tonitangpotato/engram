@@ -127,16 +127,24 @@ nodes:
   feat-config:
     type: Feature
     layer: application
-    status: draft
+    status: active
     description: >-
-      Extract all hardcoded parameters into config. Three layers: configurable defaults (from literature), presets
-      (chatbot/task-agent/personal-assistant/researcher), adaptive tuning (future).
+      All hardcoded parameters extracted into MemoryConfig. Three layers: configurable defaults (from literature), 
+      presets (chatbot/task-agent/personal-assistant/researcher), adaptive tuning.
     priority: supporting
   feat-presets:
     type: Component
     layer: application
-    status: draft
+    status: active
     description: 'Pre-tuned parameter sets for agent archetypes: chatbot, task-agent, personal-assistant, researcher'
+  feat-adaptive-tuning:
+    type: Component
+    layer: application
+    status: active
+    description: >-
+      Adaptive parameter tuning based on performance metrics: hit_rate adjusts search threshold, reward_ratio adjusts
+      context weight, forget_rate adjusts decay rates. Auto-adapts configuration based on usage patterns.
+    priority: supporting
   decision-positioning:
     type: Decision
     layer: domain
@@ -297,7 +305,13 @@ edges:
   - from: feat-presets
     to: feat-config
     relation: implements
+  - from: feat-adaptive-tuning
+    to: feat-config
+    relation: implements
   - from: feat-config
+    to: feat-api
+    relation: depends_on
+  - from: feat-adaptive-tuning
     to: feat-api
     relation: depends_on
   - from: feat-api
