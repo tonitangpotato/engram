@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "engramai"
-version = "0.3.3"
+version = "0.3.4"
 description = "Neuroscience-grounded memory for AI agents"
 readme = "README.md"
 license = "AGPL-3.0-only"
@@ -23,12 +23,12 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/tonitangpotato/neuromemory-ai"
-Repository = "https://github.com/tonitangpotato/neuromemory-ai"
-Issues = "https://github.com/tonitangpotato/neuromemory-ai/issues"
+Homepage = "https://github.com/tonitangpotato/engram-ai"
+Repository = "https://github.com/tonitangpotato/engram-ai"
+Issues = "https://github.com/tonitangpotato/engram-ai/issues"
 
 [project.scripts]
-neuromem = "engram.cli:main"
+engram = "engram.cli:main"
 
 [project.optional-dependencies]
 mcp = ["fastmcp"]

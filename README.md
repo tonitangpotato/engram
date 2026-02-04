@@ -5,7 +5,7 @@
 > **engram** /ˈɛnɡræm/ — a hypothesized physical trace in the brain that stores a memory. First proposed by Richard Semon (1904), the engram represents the idea that experiences leave lasting biological changes in neural tissue. We chose this name because, like its neuroscience namesake, this library treats memories not as static records but as living traces that strengthen, fade, and interact over time.
 
 [![PyPI](https://img.shields.io/pypi/v/engramai.svg)](https://pypi.org/project/engramai/)
-[![npm](https://img.shields.io/npm/v/engramai.svg)](https://www.npmjs.com/package/engramai)
+[![npm](https://img.shields.io/npm/v/neuromemory-ai.svg)](https://www.npmjs.com/package/neuromemory-ai)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://python.org)
 [![TypeScript](https://img.shields.io/badge/typescript-5.0%2B-blue.svg)](https://typescriptlang.org)
@@ -112,12 +112,13 @@ The math is simple. The insight is connecting it to agent memory. Total core: **
 - ⚙️ **Config presets** — tuned parameter sets for chatbot, task-agent, personal-assistant, researcher
 - 📦 **Zero required dependencies** — pure Python stdlib for FTS5 mode. Optional embedding adapters for semantic search.
 - 🔌 **Pluggable embeddings** — supports OpenAI, sentence-transformers, or custom adapters.
+- 🌏 **CJK language support** — Chinese (jieba), Japanese (sudachi), or fallback n-gram tokenization.
 
 ## What You Need
 
 **Just Python 3.10+ and your existing LLM.**
 
-NeuromemoryAI works in two modes:
+Engram works in two modes:
 
 ### FTS5 Mode (Zero Dependencies)
 ```python
@@ -154,9 +155,12 @@ Best for: Production deployments needing semantic retrieval. Supports OpenAI, se
 | Platform | Install | Documentation |
 |----------|---------|---------------|
 | Python | `pip install engramai` | [PyPI](https://pypi.org/project/engramai/) |
+| Python + Chinese | `pip install engramai[chinese]` | Uses jieba tokenizer |
+| Python + Japanese | `pip install engramai[japanese]` | Uses sudachi tokenizer |
+| Python + All CJK | `pip install engramai[cjk]` | Full CJK support |
 | TypeScript | `npm install neuromemory-ai` | [npm](https://www.npmjs.com/package/neuromemory-ai) |
 | MCP Server | `python -m engram.mcp_server` | [MCP Setup](#mcp-integration) |
-| CLI | `neuromem --help` | [CLI Docs](#cli-usage) |
+| CLI | `engram --help` | [CLI Docs](#cli-usage) |
 
 ### 2. Basic Usage (standalone)
 
@@ -273,7 +277,7 @@ That's it. Your agent now has biologically-inspired memory that strengthens with
 
 ### 7. CLI (Command Line Interface)
 
-After installation, use the `neuromem` command:
+After installation, use the `engram` command:
 
 ```bash
 # Add memories
@@ -530,7 +534,7 @@ Then just talk to your agent naturally:
 - "What do you remember about my preferences?"
 - "Consolidate your memories"
 
-The agent will use the `neuromem` CLI automatically.
+The agent will use the `engram` CLI automatically.
 
 **Option 2: MCP Integration (Deeper)**
 
@@ -758,7 +762,7 @@ Engram is grounded in peer-reviewed cognitive science:
 
 ## Storage
 
-NeuromemoryAI uses a **pluggable storage architecture**. The core philosophy is zero external dependencies for the default case:
+Engram uses a **pluggable storage architecture**. The core philosophy is zero external dependencies for the default case:
 
 | Backend | Status | Dependencies | Use Case |
 |---------|--------|--------------|----------|
@@ -801,7 +805,7 @@ For TypeScript-specific documentation, see [engram-ts/README.md](./engram-ts/REA
 
 ## Testing & Edge Cases
 
-**152 tests** cover unit, integration, and edge case scenarios.
+**172 tests** cover unit, integration, and edge case scenarios.
 
 ```bash
 # Run all tests
