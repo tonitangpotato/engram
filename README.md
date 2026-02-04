@@ -426,6 +426,122 @@ All three are designed for **LLM agents** — the comparison is about what *addi
 
 **Engram's thesis:** Your LLM already understands semantics — that's what language models do. Memory infrastructure should handle *dynamics* (when to surface, what to forget, how associations form) using proven cognitive science models, not re-implement semantic understanding with a separate embedding pipeline.
 
+## Integration Guide
+
+### For LLM Users (Claude Desktop / Cursor / MCP Clients)
+
+**1. Install**
+```bash
+pip install neuromemory-ai
+```
+
+**2. Configure MCP Server**
+
+For **Claude Desktop**, edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "engram": {
+      "command": "python3",
+      "args": ["-m", "engram.mcp_server"],
+      "env": {
+        "ENGRAM_DB_PATH": "/path/to/your/memory.db"
+      }
+    }
+  }
+}
+```
+
+For **Cursor**, edit `.cursor/mcp.json` in your project:
+
+```json
+{
+  "mcpServers": {
+    "engram": {
+      "command": "python3",
+      "args": ["-m", "engram.mcp_server"],
+      "env": {
+        "ENGRAM_DB_PATH": "./memory.db"
+      }
+    }
+  }
+}
+```
+
+**3. Available MCP Tools**
+
+| Tool | Description |
+|------|-------------|
+| `engram.store` | Store a new memory with type and importance |
+| `engram.recall` | Recall memories ranked by ACT-R activation |
+| `engram.consolidate` | Run memory consolidation (like sleep) |
+| `engram.forget` | Prune weak memories or forget specific ones |
+| `engram.reward` | Apply user feedback to shape memory |
+| `engram.stats` | Get memory statistics |
+| `engram.export` | Export database backup |
+
+---
+
+### For Clawdbot Users
+
+Clawdbot is an AI agent platform. You can integrate neuromemory-ai as a cognitive memory backend.
+
+**Option 1: Use CLI via Skill**
+
+```bash
+# Install the package
+pip install neuromemory-ai
+
+# Install the Clawdbot skill
+clawdhub install neuromemory-ai
+```
+
+Then just talk to your agent naturally:
+- "Remember that I prefer dark mode"
+- "What do you remember about my preferences?"
+- "Consolidate your memories"
+
+The agent will use the `neuromem` CLI automatically.
+
+**Option 2: MCP Integration (Deeper)**
+
+Edit your Clawdbot config (`~/.clawdbot/config.yml`):
+
+```yaml
+mcp:
+  servers:
+    engram:
+      command: python3
+      args: ["-m", "engram.mcp_server"]
+      env:
+        ENGRAM_DB_PATH: ~/.clawdbot/agents/main/memory.db
+```
+
+This gives your agent direct MCP tool access to store/recall memories.
+
+**Option 3: Replace Native Memory System**
+
+To fully replace Clawdbot's file-based memory (MEMORY.md) with neuromemory-ai:
+
+1. Configure MCP as above
+2. Update `AGENTS.md` to instruct the agent:
+
+```markdown
+## Memory System
+Use engram MCP tools for all memory operations:
+- `engram.store` — save important information
+- `engram.recall` — retrieve relevant memories
+- `engram.consolidate` — run daily during heartbeats
+- `engram.reward` — learn from user feedback
+
+Do NOT use file-based memory (MEMORY.md, memory/*.md).
+```
+
+This transforms your agent's memory from static files to a dynamic cognitive system with forgetting, consolidation, and Hebbian learning.
+
+---
+
 ## MCP Server
 
 Engram ships with an MCP (Model Context Protocol) server for use with Claude, Clawdbot, or any MCP-compatible client.
