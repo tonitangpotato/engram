@@ -15,6 +15,14 @@ Engram is a production-ready memory system for AI agents, inspired by cognitive 
 - 🌍 **Semantic Search** - Cross-language memory recall (50+ languages)
 - 🔄 **Auto-Fallback** - Zero-config deployment with automatic provider detection
 
+## 📚 Documentation
+
+- **[Integration Guide](INTEGRATION-GUIDE.md)** - Level 3 auto-recall/store implementation
+- **[Performance Analysis](PERFORMANCE.md)** - Real production metrics and optimization
+- **[Embedding Configuration](engram/EMBEDDING-CONFIG.md)** - Provider setup and tuning
+
+---
+
 ## Quick Start
 
 ### Installation
