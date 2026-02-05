@@ -1,47 +1,67 @@
 [build-system]
-requires = ["setuptools>=68.0"]
-build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_backend"
 
 [project]
 name = "engramai"
-version = "0.3.6"
-description = "Neuroscience-grounded memory for AI agents"
+version = "1.0.0"
+description = "Neuroscience-grounded memory system for AI agents with semantic search and auto-fallback"
 readme = "README.md"
-license = "AGPL-3.0-only"
-requires-python = ">=3.10"
-dependencies = []
-keywords = ["memory", "agents", "ai", "neuroscience", "act-r", "cognitive-science"]
+authors = [
+    {name = "potato", email = "potato@example.com"}
+]
+license = {text = "MIT"}
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+keywords = ["ai", "memory", "agent", "cognitive", "neuroscience", "semantic-search"]
+requires-python = ">=3.9"
+
+dependencies = [
+    "mcp>=0.9.0",
+    "numpy>=1.24.0",
+]
+
+[project.optional-dependencies]
+# Embedding providers (all optional for zero-config)
+sentence-transformers = ["sentence-transformers>=2.2.0"]
+ollama = ["requests>=2.31.0"]
+openai = ["openai>=1.0.0"]
+
+# Development dependencies
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+]
+
+# All embedding providers (for testing)
+all = [
+    "sentence-transformers>=2.2.0",
+    "requests>=2.31.0",
+    "openai>=1.0.0",
 ]
 
 [project.urls]
 Homepage = "https://github.com/tonitangpotato/engram-ai"
+Documentation = "https://github.com/tonitangpotato/engram-ai#readme"
 Repository = "https://github.com/tonitangpotato/engram-ai"
 Issues = "https://github.com/tonitangpotato/engram-ai/issues"
 
 [project.scripts]
 engram = "engram.cli:main"
 
-[project.optional-dependencies]
-mcp = ["fastmcp"]
-dev = ["pytest"]
-chinese = ["jieba>=0.42"]
-japanese = ["sudachipy>=0.6", "sudachidict-core>=20230927"]
-cjk = ["jieba>=0.42", "sudachipy>=0.6", "sudachidict-core>=20230927"]
+[tool.setuptools]
+packages = ["engram", "engram.embeddings", "engram.stores"]
 
-[tool.setuptools.packages.find]
-include = ["engram*"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-markers = [
-    "slow: marks tests as slow (deselect with '-m \"not slow\"')"
-]
+[tool.setuptools.package-data]
+engram = ["py.typed"]

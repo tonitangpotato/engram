@@ -38,4 +38,4 @@ __all__ = [
     "clear_session",
     "list_sessions",
 ]
-__version__ = "0.3.0"  # Bumped for Session Working Memory
+__version__ = "1.0.0"  # Phase 1-3: Semantic embedding + auto-fallback (production-ready)
